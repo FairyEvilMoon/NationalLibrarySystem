@@ -19,17 +19,19 @@ class OurTheme {
           ),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(style: ButtonStyle(
-        overlayColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.hovered)) {
-              return seedColor.withOpacity(
-                  0); // Default color for disabled state, or provide a custom color.
-            }
-            return seedColor; // Color for enabled state.
-          },
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.hovered)) {
+                return seedColor.withOpacity(
+                    0); // Default color for disabled state, or provide a custom color.
+              }
+              return seedColor; // Color for enabled state.
+            },
+          ),
         ),
-      )),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -37,6 +39,19 @@ class OurTheme {
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
             borderSide: BorderSide(color: seedColor)),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.hovered)) {
+                return seedColor.withOpacity(
+                    0); // Default color for disabled state, or provide a custom color.
+              }
+              return seedColor; // Color for enabled state.
+            },
+          ),
+        ),
       ),
     );
   }
