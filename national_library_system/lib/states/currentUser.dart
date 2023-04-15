@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firedart/firedart.dart';
 
 class CurrentUser {

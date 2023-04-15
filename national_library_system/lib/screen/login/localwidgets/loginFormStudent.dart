@@ -91,7 +91,7 @@ class OurLoginFormStudent extends StatelessWidget {
                 );
               }
             },
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 70, vertical: 5),
               child: Text(
                 "Log In",
@@ -107,7 +107,7 @@ class OurLoginFormStudent extends StatelessWidget {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => OurSignUp()));
               },
-              child: Text(
+              child: const Text(
                 "Register",
                 style: TextStyle(color: Colors.black),
               ))
