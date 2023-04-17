@@ -43,7 +43,7 @@ class OurSideMenuBar extends StatelessWidget {
             child: DrawerListTile(
               title: "Home",
               icon: Icon(
-                Icons.home,
+                Icons.home_outlined,
                 size: 35,
                 color: Colors.black,
               ),
@@ -81,7 +81,7 @@ class OurSideMenuBar extends StatelessWidget {
             child: DrawerListTile(
               title: "My Library",
               icon: Icon(
-                Icons.book_rounded,
+                Icons.book,
                 size: 35,
                 color: Colors.black,
               ),

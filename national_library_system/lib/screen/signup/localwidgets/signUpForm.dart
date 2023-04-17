@@ -3,6 +3,8 @@ import 'package:national_library_system/states/currentUser.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/textFormFieldWidget.dart';
+
 class OurSignUpForm extends StatefulWidget {
   const OurSignUpForm({super.key});
 
@@ -41,11 +43,11 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _fullNameController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person_outlined),
-                  hintText: "Full Name"),
+            child: ourTextFormFieldWidget(
+              textController: _fullNameController,
+              icon: Icons.person_outline,
+              hintText: "Full Name",
+              obscureText: false,
             ),
           ),
           SizedBox(
@@ -53,10 +55,11 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.alternate_email), hintText: "Email"),
+            child: ourTextFormFieldWidget(
+              textController: _emailController,
+              icon: Icons.alternate_email,
+              hintText: "Email",
+              obscureText: false,
             ),
           ),
           SizedBox(
@@ -64,10 +67,10 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline), hintText: "Password"),
+            child: ourTextFormFieldWidget(
+              textController: _passwordController,
+              icon: Icons.lock_outline,
+              hintText: "Password",
               obscureText: true,
             ),
           ),
@@ -76,11 +79,10 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_open),
-                  hintText: "Confirm Password"),
+            child: ourTextFormFieldWidget(
+              textController: _confirmPasswordController,
+              icon: Icons.lock_outline,
+              hintText: "Confirm Password",
               obscureText: true,
             ),
           ),

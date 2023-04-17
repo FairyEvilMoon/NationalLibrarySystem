@@ -5,6 +5,8 @@ import 'package:national_library_system/states/currentUser.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/utils/ourTheme.dart';
 
+import '../../../widgets/textFormFieldWidget.dart';
+
 class OurLoginFormAdmin extends StatelessWidget {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -48,10 +50,11 @@ class OurLoginFormAdmin extends StatelessWidget {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.alternate_email), hintText: "Email"),
+            child: ourTextFormFieldWidget(
+              textController: _emailController,
+              icon: Icons.alternate_email,
+              hintText: "Email",
+              obscureText: false,
             ),
           ),
           const SizedBox(
@@ -59,11 +62,11 @@ class OurLoginFormAdmin extends StatelessWidget {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _passwordController,
+            child: ourTextFormFieldWidget(
+              textController: _passwordController,
+              icon: Icons.lock_outline,
+              hintText: "Password",
               obscureText: true,
-              decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline), hintText: "Password"),
             ),
           ),
           const SizedBox(

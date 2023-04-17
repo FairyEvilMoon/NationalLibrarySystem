@@ -39,8 +39,8 @@ Container ProfileCard() {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            "Majid Alqaseer",
-            style: TextStyle(fontWeight: FontWeight.w700),
+            "Account",
+            style: TextStyle(fontWeight: FontWeight.w800),
           ),
         ),
         Icon(Icons.keyboard_arrow_down)

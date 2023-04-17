@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OurTheme {
-  Color seedColor = Color.fromRGBO(252, 41, 41, 1);
+  Color seedColor = Color.fromRGBO(190, 22, 22, 1);
   ThemeData buildTheme() {
     return ThemeData(
         useMaterial3: true,
@@ -31,14 +31,6 @@ class OurTheme {
               },
             ),
           ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: seedColor)),
         ),
         iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
