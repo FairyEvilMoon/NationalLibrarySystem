@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:national_library_system/widgets/textFormFieldWidget.dart';
 import 'package:national_library_system/screen/signup/signup.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/utils/ourTheme.dart';
@@ -53,10 +54,11 @@ class OurLoginFormStudent extends StatelessWidget {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.alternate_email), hintText: "Email"),
+            child: ourTextFormFieldWidget(
+              textController: _emailController,
+              icon: Icons.alternate_email,
+              hintText: "Email",
+              obscureText: false,
             ),
           ),
           SizedBox(
@@ -64,11 +66,11 @@ class OurLoginFormStudent extends StatelessWidget {
           ),
           SizedBox(
             width: 250,
-            child: TextFormField(
-              controller: _passwordController,
+            child: ourTextFormFieldWidget(
+              textController: _passwordController,
+              icon: Icons.lock_outline,
+              hintText: "Password",
               obscureText: true,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline), hintText: "Password"),
             ),
           ),
           SizedBox(

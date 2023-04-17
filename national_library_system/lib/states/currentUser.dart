@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:firedart/auth/user_gateway.dart';
 import 'package:firedart/firedart.dart';
 
 class CurrentUser {
@@ -31,5 +31,10 @@ class CurrentUser {
       print(e);
     }
     return retVal;
+  }
+
+  void protasd() {
+    bool user = _auth.isSignedIn;
+    return print(user);
   }
 }
