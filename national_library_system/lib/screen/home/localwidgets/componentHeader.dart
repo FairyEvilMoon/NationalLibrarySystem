@@ -40,7 +40,7 @@ Container ProfileCard() {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
             "Account",
-            style: TextStyle(fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
         ),
         Icon(Icons.keyboard_arrow_down)

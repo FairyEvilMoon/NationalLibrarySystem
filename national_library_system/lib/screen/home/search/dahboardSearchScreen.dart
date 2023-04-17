@@ -111,10 +111,14 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.search, color: Colors.white),
+                                    Icon(
+                                      Icons.search,
+                                      color: Colors.black,
+                                    ),
                                     Text(
                                       "Search",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.black),
                                     ),
                                   ],
                                 ),
@@ -148,11 +152,16 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                             itemCount: _books.length + 1,
                                             itemBuilder: (context, index) {
                                               if (index == 0) {
-                                                return Text(
-                                                  '$_numResults Results',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w900,
-                                                    fontSize: 25.0,
+                                                return Card(
+                                                  child: Center(
+                                                    child: Text(
+                                                      '   $_numResults \nResults',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        fontSize: 25.0,
+                                                      ),
+                                                    ),
                                                   ),
                                                 );
                                               } else if (index ==
