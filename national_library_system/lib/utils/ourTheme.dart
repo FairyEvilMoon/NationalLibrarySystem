@@ -45,6 +45,9 @@ class OurTheme {
             ),
           ),
         ),
-        scaffoldBackgroundColor: Colors.white);
+        scaffoldBackgroundColor: Colors.white,
+        scrollbarTheme: ScrollbarThemeData(
+          thickness: MaterialStateProperty.all(0),
+        ));
   }
 }

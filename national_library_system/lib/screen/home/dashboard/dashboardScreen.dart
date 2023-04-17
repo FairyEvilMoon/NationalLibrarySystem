@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:national_library_system/utils/ourTheme.dart';
+import 'package:national_library_system/widgets/ourContainer.dart';
 
 import '../localwidgets/componentHeader.dart';
 
@@ -14,27 +15,14 @@ class DashboardScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
+            OurContainer(
               child: Header(headerText, context),
             ),
             Row(
               children: [
                 Expanded(
                   child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        color: Colors.amber,
-                      ),
-                      Container(
-                        height: 100,
-                        color: Colors.green,
-                        child: Center(
-                            child: Container(
-                          child: TextFormField(),
-                        )),
-                      ),
-                    ],
+                    children: [],
                   ),
                 ),
               ],

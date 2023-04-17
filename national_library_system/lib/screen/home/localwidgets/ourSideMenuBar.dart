@@ -23,9 +23,9 @@ class OurSideMenuBar extends StatelessWidget {
           child: Text(
             "NATIONAL BOOK SYSTEM",
             style: TextStyle(
-              fontSize: 17.0,
-              fontWeight: FontWeight.bold,
-            ),
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic),
           ),
         ),
         DrawerHeader(

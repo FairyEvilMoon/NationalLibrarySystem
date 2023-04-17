@@ -136,7 +136,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: !_haveBooks
                                         ? const Center(
-                                            child: CircularProgressIndicator(),
+                                            child: null,
                                           )
                                         : GridView.builder(
                                             gridDelegate:
