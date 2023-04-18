@@ -1,6 +1,9 @@
 # NationalLibrarySystem
 library system for members to search and borrow books with admin power
 
+this project was made for my university project in one of my courses using flutter, firebase, google books api
+
+
 Login Page
 ![image](https://user-images.githubusercontent.com/94723756/232921270-971a033d-f5cb-4e2c-ab7d-85cd56c1cc77.png)
 
