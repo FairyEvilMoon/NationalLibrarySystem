@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:national_library_system/screen/home/dashboard/dashboardScreen.dart';
 import 'package:national_library_system/screen/home/localwidgets/ourSideMenuBar.dart';
+import 'package:national_library_system/screen/home/search/dahboardSearchScreen.dart';
+import 'package:national_library_system/screen/home/search/oursearchPage.dart';
 import 'package:national_library_system/utils/ourTheme.dart';
 import 'package:national_library_system/widgets/ourIconContainer.dart';
 
@@ -24,8 +26,8 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
               flex: 5,
-              child: DashboardScreen(
-                headerText: "Dashboard",
+              child: DashboardSearch(
+                headerText: "Search",
               ))
         ],
       )),
