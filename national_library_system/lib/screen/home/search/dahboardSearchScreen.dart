@@ -36,12 +36,8 @@ class _DashboardSearchState extends State<DashboardSearch> {
         scheme: 'https',
         host: 'www.googleapis.com',
         path: 'books/v1/volumes',
-        query: 'q=' +
-            searchString +
-            '&maxResults=10&startIndex=' +
-            pageNumber.toString() +
-            '&key=' +
-            apikey);
+        query:
+            'q=$searchString&maxResults=10&startIndex=$pageNumber&key=$apikey');
     final client = HttpClient();
     client.badCertificateCallback =
         (X509Certificate cert, String host, int port) => true;

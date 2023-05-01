@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:national_library_system/providers/appwrite_provider.dart';
 import 'package:national_library_system/widgets/textFormFieldWidget.dart';
 import 'package:national_library_system/screen/signup/signup.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
@@ -19,12 +20,13 @@ class OurLoginFormStudent extends StatelessWidget {
       String email, String password, BuildContext context) async {
     bool retVal = false;
     try {
-      if (await CurrentUser().signInWithEmailAndPassword(email, password)) {
+      if (await AppWriteProvider().login(email, password)) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => HomeScreen()));
         retVal = true;
         _emailController..clear();
         _passwordController.clear();
+        AppWriteProvider().getUserName();
       }
     } catch (e) {
       print(e);
