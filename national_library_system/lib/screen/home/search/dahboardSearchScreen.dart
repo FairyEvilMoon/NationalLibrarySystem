@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:national_library_system/utils/ourTheme.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/models/bookModel.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../providers/book_provider.dart';
 import '../localwidgets/componentHeader.dart';
 import 'package:national_library_system/widgets/book_card.dart';
 import 'package:http/io_client.dart';
@@ -31,34 +34,34 @@ class _DashboardSearchState extends State<DashboardSearch> {
     return MediaQuery.of(context).size.width;
   }
 
-  void _getSearchResults(num page) async {
-    Uri url = Uri(
-        scheme: 'https',
-        host: 'www.googleapis.com',
-        path: 'books/v1/volumes',
-        query:
-            'q=$searchString&maxResults=10&startIndex=$pageNumber&key=$apikey');
-    final client = HttpClient();
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-    IOClient http = IOClient(client);
-    await http.get(url).then(
-      (response) async {
-        if (response.statusCode == 200) {
-          Map<String, dynamic> result = json.decode(response.body);
-          var items = result['items'];
-          for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            Book book = Book(item);
-            _books.add(book);
-          }
-          _numResults = result['totalItems'];
-          setState(() => _haveBooks = true);
-        }
-      },
-    );
-    pageNumber = pageNumber + 1;
-  }
+  // void _getSearchResults(num page) async {
+  //   Uri url = Uri(
+  //       scheme: 'https',
+  //       host: 'www.googleapis.com',
+  //       path: 'books/v1/volumes',
+  //       query:
+  //           'q=$searchString&maxResults=10&startIndex=$pageNumber&key=$apikey');
+  //   final client = HttpClient();
+  //   client.badCertificateCallback =
+  //       (X509Certificate cert, String host, int port) => true;
+  //   IOClient http = IOClient(client);
+  //   await http.get(url).then(
+  //     (response) async {
+  //       if (response.statusCode == 200) {
+  //         Map<String, dynamic> result = json.decode(response.body);
+  //         var items = result['items'];
+  //         for (var i = 0; i < items.length; i++) {
+  //           var item = items[i];
+  //           Book book = Book(item);
+  //           _books.add(book);
+  //         }
+  //         _numResults = result['totalItems'];
+  //         setState(() => _haveBooks = true);
+  //       }
+  //     },
+  //   );
+  //   pageNumber = pageNumber + 1;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +96,9 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                   autofocus: true,
                                   maxLength: 50,
                                   onSubmitted: (value) => {
-                                    searchString = value,
-                                    _books = [],
-                                    _getSearchResults(0)
+                                    // searchString = value,
+                                    // _books = [],
+                                    // _getSearchResults(0)
                                   },
                                 ),
                               ),
@@ -120,9 +123,9 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    searchString = _searchController.text;
-                                    _books = [];
-                                    _getSearchResults(0);
+                                    // searchString = _searchController.text;
+                                    // _books = [];
+                                    // _getSearchResults(0);
                                   });
                                 }),
                           ),
@@ -134,66 +137,114 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 child: OurContainer(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: !_haveBooks
-                                        ? const Center(
-                                            child: null,
-                                          )
-                                        : GridView.builder(
+                                    child: Consumer<BookProvider>(
+                                      builder: (context, provider, child) {
+                                        if (provider.books.isEmpty) {
+                                          return Center(
+                                            child: Text('No books found'),
+                                          );
+                                        } else {
+                                          return GridView.builder(
                                             gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 5,
-                                                    mainAxisSpacing: 5.0,
-                                                    crossAxisSpacing: 2.0,
-                                                    childAspectRatio: 2 / 3),
-                                            itemCount: _books.length + 1,
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 0.7,
+                                            ),
+                                            itemCount: provider.books.length,
                                             itemBuilder: (context, index) {
-                                              if (index == 0) {
-                                                return Card(
-                                                  child: Center(
-                                                    child: Text(
-                                                      '   $_numResults \nResults',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        fontSize: 25.0,
-                                                      ),
+                                              final book =
+                                                  provider.books[index];
+                                              return GestureDetector(
+                                                onTap: () =>
+                                                    launch(book.buyLink),
+                                                child: Container(
+                                                  margin: EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Colors.grey[300]!,
                                                     ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                );
-                                              } else if (index ==
-                                                  _books.length) {
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    OurContainer(
-                                                      size: 0,
-                                                      child: ElevatedButton(
-                                                        onPressed: () => {
-                                                          pageNumber =
-                                                              pageNumber + 1,
-                                                          _getSearchResults(
-                                                              pageNumber)
-                                                        },
-                                                        child: const Text(
-                                                          'Load More',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              color:
-                                                                  Colors.white),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Stack(
+                                                          children: [
+                                                            Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                            Image.network(
+                                                              book.thumbnail,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }
-                                              Card bookCard = BookCard(
-                                                  _books[index], screenWidth);
-                                              return bookCard;
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              book.title,
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            Text(
+                                                              book.authors,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[600],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          provider
+                                                              .toggleBookmark(
+                                                                  book.id);
+                                                        },
+                                                        icon: Icon(
+                                                          provider.bookmarks
+                                                                  .contains(
+                                                                      book.id)
+                                                              ? Icons.bookmark
+                                                              : Icons
+                                                                  .bookmark_outline,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
                                             },
-                                          ),
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
