@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "national_library_system",
+            "cwd": "national_library_system",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "national_library_system (profile mode)",
+            "cwd": "national_library_system",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "national_library_system (release mode)",
+            "cwd": "national_library_system",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
