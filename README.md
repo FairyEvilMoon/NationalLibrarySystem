@@ -1,5 +1,5 @@
 # NationalLibrarySystem
-library system for members to search and borrow books with admin power
+library system for members to search and buy books
 
 this project I developed using flutter, appwrite, google books api
 
