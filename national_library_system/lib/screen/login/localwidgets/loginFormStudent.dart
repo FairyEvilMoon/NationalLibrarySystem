@@ -23,7 +23,7 @@ class OurLoginFormStudent extends StatelessWidget {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => HomeScreen()));
         retVal = true;
-        _emailController..clear();
+        _emailController.clear();
         _passwordController.clear();
         AppWriteProvider().getUserName();
       }

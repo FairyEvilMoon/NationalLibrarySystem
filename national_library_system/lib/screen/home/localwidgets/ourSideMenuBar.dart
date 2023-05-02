@@ -40,25 +40,6 @@ class OurSideMenuBar extends StatelessWidget {
             blurRadius: 4.0,
             size: 1,
             child: DrawerListTile(
-              title: "Home",
-              icon: Icon(
-                Icons.home_outlined,
-                size: 35,
-                color: Colors.black,
-              ),
-              press: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
-              },
-            ),
-          ),
-        ),
-        Container(
-          margin: spacingMargin(),
-          child: OurContainer(
-            blurRadius: 4.0,
-            size: 1,
-            child: DrawerListTile(
               title: "Search",
               icon: Icon(
                 Icons.search,
@@ -68,25 +49,6 @@ class OurSideMenuBar extends StatelessWidget {
               press: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => OurSearchPage()));
-              },
-            ),
-          ),
-        ),
-        Container(
-          margin: spacingMargin(),
-          child: OurContainer(
-            blurRadius: 4.0,
-            size: 1,
-            child: DrawerListTile(
-              title: "My Library",
-              icon: Icon(
-                Icons.book,
-                size: 35,
-                color: Colors.black,
-              ),
-              press: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => OurLibraryPage()));
               },
             ),
           ),
