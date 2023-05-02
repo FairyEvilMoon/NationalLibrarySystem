@@ -6,8 +6,8 @@ class GoogleBooksApi {
   static const String _baseUrl = 'https://www.googleapis.com/books/v1/volumes';
 
   Future<List<dynamic>> searchBooks(String query) async {
-    final response =
-        await http.get(Uri.parse('$_baseUrl?q=$query&key=$_apiKey'));
+    final response = await http
+        .get(Uri.parse('$_baseUrl?q=$query&maxResults=15&key=$_apiKey'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['items'] ?? [];

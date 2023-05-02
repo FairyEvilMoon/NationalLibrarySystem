@@ -228,6 +228,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                       ),
                                                       IconButton(
                                                         onPressed: () {
+                                                          print(book.buyLink);
                                                           print(book.id);
                                                           print(AppWriteProvider()
                                                               .getUserName());
