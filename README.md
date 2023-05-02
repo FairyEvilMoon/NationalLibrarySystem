@@ -12,3 +12,7 @@ Signup Page
 
 Search Page
 ![image](https://user-images.githubusercontent.com/94723756/235581352-d62e686a-be75-4fa4-9379-a60506c5d826.png)
+
+
+DISCLAIMER
+this project uses the local version of appwrite so it probably wont work on anyone machine except mine
