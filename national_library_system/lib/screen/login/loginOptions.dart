@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../widgets/ourContainer.dart';
-import 'loginAdmin.dart';
 import 'loginStudent.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OurLoginOptions extends StatelessWidget {
-  const OurLoginOptions({super.key});
+  final Uri _url = Uri.parse('http://172.23.112.1/');
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,7 @@ class OurLoginOptions extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OurLoginAdmin()));
+                        launchUrl(_url);
                       },
                       child: Padding(
                         padding:

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:national_library_system/states/currentUser.dart';
+import 'package:national_library_system/providers/appwrite_provider.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
-import 'package:provider/provider.dart';
-
 import '../../../widgets/textFormFieldWidget.dart';
 
 class OurSignUpForm extends StatefulWidget {
@@ -92,8 +90,8 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
           ElevatedButton(
             onPressed: () async {
               if (_passwordController.text == _confirmPasswordController.text) {
-                await CurrentUser().registerWithEmailAndPassword(
-                    _emailController.text, _passwordController.text);
+                await AppWriteProvider().signUp(_emailController.text,
+                    _passwordController.text, _fullNameController.text);
                 Navigator.pop(context);
               } else {
                 showDialog(

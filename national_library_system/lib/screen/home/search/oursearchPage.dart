@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:national_library_system/providers/book_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/ourTheme.dart';
 import '../dashboard/dashboardScreen.dart';
@@ -25,8 +26,11 @@ class OurSearchPage extends StatelessWidget {
             ),
             Expanded(
               flex: 5,
-              child: DashboardSearch(
-                headerText: "Search",
+              child: ChangeNotifierProvider(
+                create: (context) => BookProvider(),
+                child: DashboardSearch(
+                  headerText: "Search",
+                ),
               ),
             ),
           ],

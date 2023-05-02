@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:national_library_system/utils/ourTheme.dart';
+import 'package:national_library_system/providers/appwrite_provider.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/models/bookModel.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../providers/book_provider.dart';
 import '../localwidgets/componentHeader.dart';
-import 'package:national_library_system/widgets/book_card.dart';
-import 'package:http/io_client.dart';
 
 class DashboardSearch extends StatefulWidget {
   const DashboardSearch({super.key, required this.headerText});
@@ -18,54 +19,33 @@ class DashboardSearch extends StatefulWidget {
 }
 
 class _DashboardSearchState extends State<DashboardSearch> {
-  String apikey = 'AIzaSyD6EUeGo1H0t4p9ZI585wGozAxAZ4jTxQ0';
-  String searchString = '';
-  late num pageNumber = 0;
-  late List<Book> _books = [];
-  late bool _haveBooks = false;
-  late num _numResults;
-
   final _searchController = TextEditingController();
-
+  final _scrollController = ScrollController();
+  List<Book> _books = [];
   double get screenWidth {
     return MediaQuery.of(context).size.width;
   }
 
-  void _getSearchResults(num page) async {
-    Uri url = Uri(
-        scheme: 'https',
-        host: 'www.googleapis.com',
-        path: 'books/v1/volumes',
-        query: 'q=' +
-            searchString +
-            '&maxResults=10&startIndex=' +
-            pageNumber.toString() +
-            '&key=' +
-            apikey);
-    final client = HttpClient();
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-    IOClient http = IOClient(client);
-    await http.get(url).then(
-      (response) async {
-        if (response.statusCode == 200) {
-          Map<String, dynamic> result = json.decode(response.body);
-          var items = result['items'];
-          for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            Book book = Book(item);
-            _books.add(book);
-          }
-          _numResults = result['totalItems'];
-          setState(() => _haveBooks = true);
-        }
-      },
-    );
-    pageNumber = pageNumber + 1;
+  void searchBooks(String query) async {
+    List<Book> fetchedBooks =
+        await Provider.of<BookProvider>(context, listen: false)
+            .searchBooks(query);
+    setState(() {
+      _books = fetchedBooks;
+    });
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<BookProvider>(context);
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -96,10 +76,10 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                   controller: _searchController,
                                   autofocus: true,
                                   maxLength: 50,
-                                  onSubmitted: (value) => {
-                                    searchString = value,
-                                    _books = [],
-                                    _getSearchResults(0)
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      searchBooks(value);
+                                    });
                                   },
                                 ),
                               ),
@@ -124,9 +104,10 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    searchString = _searchController.text;
-                                    _books = [];
-                                    _getSearchResults(0);
+                                    {
+                                      searchBooks(_searchController.text);
+                                    }
+                                    ;
                                   });
                                 }),
                           ),
@@ -138,64 +119,132 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 child: OurContainer(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: !_haveBooks
-                                        ? const Center(
-                                            child: null,
-                                          )
+                                    child: _books.isEmpty
+                                        ? Center(child: Text('No Books Found'))
                                         : GridView.builder(
+                                            controller: _scrollController,
                                             gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 5,
                                                     mainAxisSpacing: 5.0,
                                                     crossAxisSpacing: 2.0,
                                                     childAspectRatio: 2 / 3),
-                                            itemCount: _books.length + 1,
+                                            itemCount: _books.length,
                                             itemBuilder: (context, index) {
-                                              if (index == 0) {
-                                                return Card(
-                                                  child: Center(
-                                                    child: Text(
-                                                      '   $_numResults \nResults',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        fontSize: 25.0,
-                                                      ),
+                                              final book = _books[index];
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  // Display the book details here
+                                                  //so far non
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Colors.grey[300]!,
                                                     ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                );
-                                              } else if (index ==
-                                                  _books.length) {
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    OurContainer(
-                                                      size: 0,
-                                                      child: ElevatedButton(
-                                                        onPressed: () => {
-                                                          pageNumber =
-                                                              pageNumber + 1,
-                                                          _getSearchResults(
-                                                              pageNumber)
-                                                        },
-                                                        child: const Text(
-                                                          'Load More',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              color:
-                                                                  Colors.white),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Stack(
+                                                          children: [
+                                                            Center(
+                                                              child:
+                                                                  Image.network(
+                                                                book.thumbnail,
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }
-                                              Card bookCard = BookCard(
-                                                  _books[index], screenWidth);
-                                              return bookCard;
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              book.title,
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            Text(
+                                                              book.authors,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[600],
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            book.buyLink !=
+                                                                    'non'
+                                                                ? InkWell(
+                                                                    onTap: () =>
+                                                                        _launchURL(
+                                                                            book.buyLink),
+                                                                    child: Text(
+                                                                      'Buy',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            1,
+                                                                            1),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Text(
+                                                                    "Not Available",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey),
+                                                                  )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          print(book.buyLink);
+                                                          print(book.id);
+                                                          print(AppWriteProvider()
+                                                              .getUserName());
+                                                          AppWriteProvider()
+                                                              .addBookmark(
+                                                                  book.id);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons
+                                                              .bookmark_outline,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
                                             },
                                           ),
                                   ),
