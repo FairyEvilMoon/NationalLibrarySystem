@@ -4,15 +4,16 @@ class Book {
   final String authors;
   final String thumbnail;
   final String buyLink;
-  final String price;
+  // final String price;
 
-  Book(
-      {required this.id,
-      required this.title,
-      required this.authors,
-      required this.thumbnail,
-      required this.buyLink,
-      required this.price});
+  Book({
+    required this.id,
+    required this.title,
+    required this.authors,
+    required this.thumbnail,
+    required this.buyLink,
+    // required this.price
+  });
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
@@ -22,7 +23,7 @@ class Book {
       thumbnail: json['volumeInfo']['imageLinks']['smallThumbnail'] ??
           'Image not found',
       buyLink: json['saleInfo']['buyLink'] ?? 'Not available for purchase',
-      price: json['saleInfo']['retailPrice'],
+      // price: json['saleInfo']['retailPrice'],
     );
   }
 }

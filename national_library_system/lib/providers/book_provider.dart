@@ -10,11 +10,12 @@ class BookProvider extends ChangeNotifier {
   List<Book> get books => _books;
   List<String> get bookmarks => _bookmarks;
 
-  void searchBooks(String query) async {
+  Future<List<Book>> searchBooks(String query) async {
     final api = GoogleBooksApi();
     final items = await api.searchBooks(query);
     _books = items.map((item) => Book.fromJson(item)).toList();
     notifyListeners();
+    return _books;
   }
 
   void toggleBookmark(String id) {

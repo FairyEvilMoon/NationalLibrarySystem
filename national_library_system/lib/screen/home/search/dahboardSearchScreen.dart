@@ -2,15 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:national_library_system/utils/ourTheme.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/models/bookModel.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../providers/book_provider.dart';
 import '../localwidgets/componentHeader.dart';
-import 'package:national_library_system/widgets/book_card.dart';
-import 'package:http/io_client.dart';
 
 class DashboardSearch extends StatefulWidget {
   const DashboardSearch({super.key, required this.headerText});
@@ -21,50 +18,32 @@ class DashboardSearch extends StatefulWidget {
 }
 
 class _DashboardSearchState extends State<DashboardSearch> {
-  String apikey = 'AIzaSyD6EUeGo1H0t4p9ZI585wGozAxAZ4jTxQ0';
-  String searchString = '';
-  late num pageNumber = 0;
-  late List<Book> _books = [];
-  late bool _haveBooks = false;
-  late num _numResults;
-
   final _searchController = TextEditingController();
-
+  List<Book> _books = [];
   double get screenWidth {
     return MediaQuery.of(context).size.width;
   }
 
-  // void _getSearchResults(num page) async {
-  //   Uri url = Uri(
-  //       scheme: 'https',
-  //       host: 'www.googleapis.com',
-  //       path: 'books/v1/volumes',
-  //       query:
-  //           'q=$searchString&maxResults=10&startIndex=$pageNumber&key=$apikey');
-  //   final client = HttpClient();
-  //   client.badCertificateCallback =
-  //       (X509Certificate cert, String host, int port) => true;
-  //   IOClient http = IOClient(client);
-  //   await http.get(url).then(
-  //     (response) async {
-  //       if (response.statusCode == 200) {
-  //         Map<String, dynamic> result = json.decode(response.body);
-  //         var items = result['items'];
-  //         for (var i = 0; i < items.length; i++) {
-  //           var item = items[i];
-  //           Book book = Book(item);
-  //           _books.add(book);
-  //         }
-  //         _numResults = result['totalItems'];
-  //         setState(() => _haveBooks = true);
-  //       }
-  //     },
-  //   );
-  //   pageNumber = pageNumber + 1;
-  // }
+  void searchBooks(String query) async {
+    List<Book> fetchedBooks =
+        await Provider.of<BookProvider>(context, listen: false)
+            .searchBooks(query);
+    setState(() {
+      _books = fetchedBooks;
+    });
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<BookProvider>(context);
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -95,10 +74,10 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                   controller: _searchController,
                                   autofocus: true,
                                   maxLength: 50,
-                                  onSubmitted: (value) => {
-                                    // searchString = value,
-                                    // _books = [],
-                                    // _getSearchResults(0)
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      searchBooks(value);
+                                    });
                                   },
                                 ),
                               ),
@@ -123,9 +102,11 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    // searchString = _searchController.text;
-                                    // _books = [];
-                                    // _getSearchResults(0);
+                                    (query) {
+                                      Provider.of<BookProvider>(context,
+                                              listen: false)
+                                          .searchBooks(query);
+                                    };
                                   });
                                 }),
                           ),
@@ -137,26 +118,22 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 child: OurContainer(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Consumer<BookProvider>(
-                                      builder: (context, provider, child) {
-                                        if (provider.books.isEmpty) {
-                                          return Center(
-                                            child: Text('No books found'),
-                                          );
-                                        } else {
-                                          return GridView.builder(
+                                    child: _books.isEmpty
+                                        ? Center(child: Text('No Books Found'))
+                                        : GridView.builder(
                                             gridDelegate:
                                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              childAspectRatio: 0.7,
-                                            ),
-                                            itemCount: provider.books.length,
+                                                    crossAxisCount: 5,
+                                                    mainAxisSpacing: 5.0,
+                                                    crossAxisSpacing: 2.0,
+                                                    childAspectRatio: 2 / 3),
+                                            itemCount: _books.length,
                                             itemBuilder: (context, index) {
-                                              final book =
-                                                  provider.books[index];
+                                              final book = _books[index];
                                               return GestureDetector(
-                                                onTap: () =>
-                                                    launch(book.buyLink),
+                                                onTap: () {
+                                                  // Display the book details here
+                                                },
                                                 child: Container(
                                                   margin: EdgeInsets.all(8),
                                                   decoration: BoxDecoration(
@@ -170,18 +147,18 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
-                                                            .stretch,
+                                                            .center,
                                                     children: [
                                                       Expanded(
                                                         child: Stack(
                                                           children: [
                                                             Center(
                                                               child:
-                                                                  CircularProgressIndicator(),
-                                                            ),
-                                                            Image.network(
-                                                              book.thumbnail,
-                                                              fit: BoxFit.cover,
+                                                                  Image.network(
+                                                                book.thumbnail,
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -218,22 +195,34 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                                     .grey[600],
                                                               ),
                                                             ),
+                                                            SizedBox(height: 4),
+                                                            InkWell(
+                                                              onTap: () =>
+                                                                  _launchURL(book
+                                                                      .buyLink),
+                                                              child: Text(
+                                                                'Buy',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          1,
+                                                                          1),
+                                                                ),
+                                                              ),
+                                                            )
                                                           ],
                                                         ),
                                                       ),
                                                       IconButton(
                                                         onPressed: () {
-                                                          provider
-                                                              .toggleBookmark(
-                                                                  book.id);
+                                                          // Handle the bookmark feature here
                                                         },
                                                         icon: Icon(
-                                                          provider.bookmarks
-                                                                  .contains(
-                                                                      book.id)
-                                                              ? Icons.bookmark
-                                                              : Icons
-                                                                  .bookmark_outline,
+                                                          Icons
+                                                              .bookmark_outline,
                                                         ),
                                                       ),
                                                     ],
@@ -241,10 +230,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                 ),
                                               );
                                             },
-                                          );
-                                        }
-                                      },
-                                    ),
+                                          ),
                                   ),
                                 ),
                               ),
