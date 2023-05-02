@@ -199,7 +199,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                               ),
                                                             ),
                                                             SizedBox(height: 4),
-                                                            book.buyLink ==
+                                                            book.buyLink !=
                                                                     'non'
                                                                 ? InkWell(
                                                                     onTap: () =>
