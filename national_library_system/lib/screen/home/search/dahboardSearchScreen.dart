@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:national_library_system/providers/appwrite_provider.dart';
 import 'package:national_library_system/widgets/ourContainer.dart';
 import 'package:national_library_system/models/bookModel.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class DashboardSearch extends StatefulWidget {
 
 class _DashboardSearchState extends State<DashboardSearch> {
   final _searchController = TextEditingController();
+  final _scrollController = ScrollController();
   List<Book> _books = [];
   double get screenWidth {
     return MediaQuery.of(context).size.width;
@@ -102,11 +104,10 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    (query) {
-                                      Provider.of<BookProvider>(context,
-                                              listen: false)
-                                          .searchBooks(query);
-                                    };
+                                    {
+                                      searchBooks(_searchController.text);
+                                    }
+                                    ;
                                   });
                                 }),
                           ),
@@ -121,6 +122,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                     child: _books.isEmpty
                                         ? Center(child: Text('No Books Found'))
                                         : GridView.builder(
+                                            controller: _scrollController,
                                             gridDelegate:
                                                 SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 5,
@@ -133,6 +135,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                               return GestureDetector(
                                                 onTap: () {
                                                   // Display the book details here
+                                                  //so far non
                                                 },
                                                 child: Container(
                                                   margin: EdgeInsets.all(8),
@@ -169,7 +172,7 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           children: [
                                                             Text(
                                                               book.title,
@@ -196,29 +199,41 @@ class _DashboardSearchState extends State<DashboardSearch> {
                                                               ),
                                                             ),
                                                             SizedBox(height: 4),
-                                                            InkWell(
-                                                              onTap: () =>
-                                                                  _launchURL(book
-                                                                      .buyLink),
-                                                              child: Text(
-                                                                'Buy',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          255,
-                                                                          1,
-                                                                          1),
-                                                                ),
-                                                              ),
-                                                            )
+                                                            book.buyLink ==
+                                                                    'non'
+                                                                ? InkWell(
+                                                                    onTap: () =>
+                                                                        _launchURL(
+                                                                            book.buyLink),
+                                                                    child: Text(
+                                                                      'Buy',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            1,
+                                                                            1),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Text(
+                                                                    "Not Available",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey),
+                                                                  )
                                                           ],
                                                         ),
                                                       ),
                                                       IconButton(
                                                         onPressed: () {
-                                                          // Handle the bookmark feature here
+                                                          print(book.id);
+                                                          print(AppWriteProvider()
+                                                              .getUserName());
+                                                          AppWriteProvider()
+                                                              .addBookmark(
+                                                                  book.id);
                                                         },
                                                         icon: Icon(
                                                           Icons

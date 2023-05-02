@@ -1,5 +1,4 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:flutter/foundation.dart';
 import 'package:appwrite/models.dart';
 
 class AppWriteProvider {
@@ -49,17 +48,22 @@ class AppWriteProvider {
   Future<String> getUserName() async {
     final account = Account(AppWriteProvider.client);
     User response = await account.get();
-    return response.name;
+    return response.$id;
+  }
+
+  Future<void> addBookmark(String bookId) async {
+    final database = Databases(client);
+    try {
+      await database.createDocument(
+        databaseId: 'userLibrary',
+        collectionId: 'userLibrary',
+        documentId: ID.unique(),
+        data: {
+          'BookID': bookId,
+        },
+      );
+    } on AppwriteException catch (e) {
+      print(e);
+    }
   }
 }
-
-
-  // Future<void> registerWithEmailAndPassword(
-  //     String email, String password) async {
-  //   final user = await _auth.signUp(
-  //     email,
-  //     password,
-  //   );
-
-  //   // you can also store the user in Database
-  // }
